@@ -56,9 +56,14 @@ const login = async function (req, res, next) {
     }
 
     let token = generateAuthToken(user_exists.dataValues.id);
-    return res
-      .status(200)
-      .json({ message: "User logged in successfully", body: { token: token } });
+    return res.status(200).json({
+      message: "User logged in successfully",
+      body: {
+        id: user_exists.dataValues.id,
+        type: user_exists.dataValues.type,
+        token: token,
+      },
+    });
   } catch (error) {
     console.error(error);
     next(error);

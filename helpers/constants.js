@@ -6,6 +6,11 @@ const parkingSpotType = {
   4: "Electric",
 };
 
+const parkingSpotFree = {
+  0: "No",
+  1: "Yes",
+};
+
 const vehicleType = {
   0: "Car",
   1: "Truck",
@@ -28,7 +33,7 @@ const paymentStatus = {
 
 const userType = {
   0: "Admin",
-  1: "Parking Attendant",
+  1: "Attendant",
 };
 
 module.exports = {

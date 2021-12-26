@@ -15,7 +15,7 @@ const get_user = async (payload) => {
 };
 
 const save_user = async (data) => {
-  console.log(data)
+  console.log(data);
   let user = await User.create({
     email: data.email,
     password: data.password,

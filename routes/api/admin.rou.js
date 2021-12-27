@@ -12,13 +12,14 @@ const {
   edit_parking_spot,
   get_all_parking_lot_addresses,
 } = require("../../controllers/admin.ctr");
+const auth = require("../../middleware/auth");
 
 // adding a parking lot address
 router.post("/add_parking_lot_address", (req, res, next) => {
   add_parking_lot_address(req, res, next);
 });
 
-router.get("/get_all_parking_lot_addresses", (req, res, next) => {
+router.get("/get_all_parking_lot_addresses", auth, (req, res, next) => {
   get_all_parking_lot_addresses(req, res, next);
 });
 

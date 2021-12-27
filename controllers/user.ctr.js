@@ -5,6 +5,8 @@ const {
   generateAuthToken,
 } = require("../helpers/user");
 const _ = require("lodash");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const signup = async function (req, res, next) {
   try {
@@ -55,13 +57,19 @@ const login = async function (req, res, next) {
         .json({ message: "Incorrect login credentials", body: "" });
     }
 
-    let token = generateAuthToken(user_exists.dataValues.id);
+    const accessToken = generateAuthToken(user_exists.dataValues.id);
+    const refreshToken = jwt.sign(
+      { id: user_exists.dataValues.id },
+      process.env.refreshTokenKey
+    );
+
     return res.status(200).json({
       message: "User logged in successfully",
       body: {
         id: user_exists.dataValues.id,
         type: user_exists.dataValues.type,
-        token: token,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
       },
     });
   } catch (error) {
@@ -70,4 +78,29 @@ const login = async function (req, res, next) {
   }
 };
 
-module.exports = { signup, login };
+const get_access_token = (req, res, next) => {
+  try {
+    let refreshToken = req.body.refreshToken;
+
+    if (refreshToken == null)
+      return res.status(401).json({ message: "Unauthorized", body: "" });
+
+    const result = jwt.verify(refreshToken, process.env.refreshTokenKey);
+    console.log(result.id);
+
+    if (result) {
+      const accessToken = generateAuthToken(result.id);
+      res.status(200).json({
+        message: "Your new access token",
+        body: { accessToken: accessToken },
+      });
+    } else {
+      res.status(403).json({ message: "Forbidden", body: "" });
+    }
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
+module.exports = { signup, login, get_access_token };

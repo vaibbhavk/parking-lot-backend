@@ -9,7 +9,7 @@ const checkPassword = async (password, hash_from_db) => {
 };
 
 const generateAuthToken = (id) => {
-  let token = jwt.sign({ id }, process.env.privateKey, { expiresIn: "100d" });
+  let token = jwt.sign({ id }, process.env.accessTokenKey, { expiresIn: "100d" });
   return token;
 };
 
